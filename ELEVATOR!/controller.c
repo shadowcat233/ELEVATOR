@@ -255,7 +255,7 @@ void run()
 	serve_people = 0;
 	e.count = 0;
 	int people_time = 0;
-	Activity* act;
+	//Activity* act;
 	//Condition next_condition;
 
 	while (CurrentTime < 30000)
@@ -282,12 +282,12 @@ void run()
 			e.condition = next_condition;
 		}*/
 		Act();
-		act = activity;
+		//act = activity;
 		//printf("电梯位于%d层，状态:%d\n",e.floor,e.condition);
 		//if (act)printf("下一次活动时间：%d\n",act->startTime);
 		if (e.count >= 0)e.count--;
 		CurrentTime++;
-		//Sleep(10);
+		//Sleep(100);
 	}
 	printf("一共来了%d位乘客，有%d位曾乘过电梯。\n", people_id - 1, serve_people);
 }
