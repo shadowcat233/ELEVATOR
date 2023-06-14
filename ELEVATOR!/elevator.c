@@ -108,7 +108,7 @@ Status ElevatorOut()
 }
 
 void CallOutside()
-{
+{/*
     int i;
     for (i = 0; i < MAXFLOOR; i++)
     {
@@ -116,7 +116,7 @@ void CallOutside()
         else e.CallUp[i] = false;
         if (!QueueEmpty(&AllFloor[2 * i]))e.CallDown[i] = true;
         else e.CallDown[i] = false;
-    }
+    }*/
 }
 void CallInside()
 {
