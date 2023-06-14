@@ -69,7 +69,7 @@ void AllQueueInit()
 }
 
 
-Status InitStack(Stack* S, int size)
+Status InitStack(Stack* S, int size)//初始化
 {
 	S->person = (PLink*)malloc(sizeof(PLink) * size);
 	if (NULL == S->person) { return NO; }
@@ -77,39 +77,43 @@ Status InitStack(Stack* S, int size)
 	S->top = 0;
 	return YES;
 }
-//出栈
-Status Pop(Stack* S, PLink* p)
+
+Status Pop(Stack* S, PLink* p)//出栈
 {
 	if (S->top == 0) { return OVERFLOW; }
 	*p = S->person[--S->top];
 	return YES;
 }
-//push
-Status Push(Stack* S, People* p)
+
+Status Push(Stack* S, People* p)//push
 {
 	if (S->top == S->size)return OVERFLOW;
 	S->person[S->top++] = p;
 	return YES;
 }
-//栈S是否为空
-Status IsEmpty_S(Stack* S)
+
+Status IsEmpty_S(Stack* S)//栈是否为空
 {
 	if (S->top == 0)return YES;
-	else return NO;
+	return NO;
 }
-void PrintStack(Stack S) {
+
+
+void PrintStack(Stack S)//打印栈中元素
+{
 	printf("(");
 	for (int i = 0; i < S.top; ++i) {
 		printf(" %d ", S.person[i]->id);
 	}
 	printf(")");
 }
-void PrintTime()
+
+void PrintTime()//打印时间
 {
 	printf("时间：%d\n", CurrentTime);
 }
 
-int AddPeople()
+int AddPeople()//添加人物
 {
 	People* p = (People*)malloc(sizeof(People));
 	int af;

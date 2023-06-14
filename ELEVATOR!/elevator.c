@@ -25,10 +25,11 @@ bool IsNeedOpen() {
         e.stay = false;
         return false;
     }
-    if (e.CallCar[e.floor] || (e.CallDown[e.floor] && e.state == GoingDown) || (e.CallUp[e.floor] && e.state == GoingUp)) return true;
-    if (e.condition == Arrive || e.condition == Closing || e.condition == Opened) {
-        if (e.CallDown[e.floor] && !IsNeedUp()) { e.state = GoingDown; return true; }
-        else if (e.CallUp[e.floor] && !IsNeedDown()) { e.state = GoingUp; return true; }
+    if(e.peopleNum<MAX_PEOPLE)
+    {
+        if (e.CallCar[e.floor]) return true;
+        if (e.CallDown[e.floor] && e.state == GoingDown)return true;
+        if (e.CallUp[e.floor] && e.state == GoingUp)return true;
     }
     return false;
 }

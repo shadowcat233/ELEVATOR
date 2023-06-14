@@ -7,11 +7,6 @@ Condition Close(void)
 		AddActivity(CurrentTime + TEST_TIME, Close);
 		return Opened;
 	}
-	//if (IsNeedOpen())
-	//{
-	//	e.count = 2;
-	//	return Opened;
-	//}
 	e.count = OC_TIME;
 	e.IsClosing = true;
 	return Closing;
@@ -21,8 +16,8 @@ Condition In(void)
 {
 	ElevatorIn(2 * e.floor + (e.state == GoingUp));
 	serve_people++;
-	if (!QueueEmpty(&AllFloor[2 * e.floor + (e.state == GoingUp)]))
-		AddActivity(CurrentTime + INOUT_TIME, In);
+	if (!QueueEmpty(&AllFloor[2 * e.floor + (e.state == GoingUp)])&&e.peopleNum<MAX_PEOPLE)
+		AddActivity(CurrentTime + INOUT_TIME+1, In);
 	else
 	{
 		e.InOut = false;
@@ -35,7 +30,7 @@ Condition Out(void)
 	ElevatorOut();
 	if (!IsEmpty_S(e.Stack[e.floor]))
 	{
-		AddActivity(CurrentTime + INOUT_TIME, Out);
+		AddActivity(CurrentTime + INOUT_TIME+1, Out);
 		return Opened;
 	}
 	e.CallCar[e.floor] = false;
@@ -47,9 +42,6 @@ Condition NextCondition()
 {
 	int up, down, open;
 	up = IsNeedUp(); down = IsNeedDown(); open = IsNeedOpen();
-	//if (e.floor==0||up &&!down&& e.state == GoingDown)e.state = GoingUp;
-	//if (e.floor==MAXFLOOR-1||down && !up&&e.state == GoingUp)e.state = GoingDown;
-	//if (e.condition == Opened)e.state = e.CallUp[e.floor];
 	switch (e.condition)
 	{
 	case Arrive:
@@ -69,16 +61,9 @@ Condition NextCondition()
 		return Closed;
 		break;
 	case Opening:
-		//e.CallCar[e.floor] = false; 
-		//e.state = e.CallUp[e.floor];
-		//if (e.state == GoingDown)e.CallDown[e.floor] = false;
-		//if (e.state == GoingUp)e.CallUp[e.floor] = false;
 		e.InOut = true;
 		e.valid_idle = true;
-		//if (e.count==OC_TIME-1)
-			//AddActivity(CurrentTime + START_CHECK_TIME, Close);
-		//if (!e.count)
-		//{
+
 		if (e.IsClosing == true)
 		{
 			e.IsClosing = false;
@@ -90,28 +75,23 @@ Condition NextCondition()
 		printf("电梯门已打开，");
 		PrintTime();
 		return Opened;
-		//}
 		break;
 	case Opened:
-		//outtime = OC_TIME;
-		if (/*e.count &&*/ !IsEmpty_S(e.Stack[e.floor]))
+		if (!IsEmpty_S(e.Stack[e.floor]))
 		{
 			AddActivity(CurrentTime + INOUT_TIME, Out);
 			e.InOut = true;
 			break;
 		}
-		else if (/*e.count && */ !QueueEmpty(&AllFloor[2 * e.floor + (e.state == GoingUp)]))
+		else if (!QueueEmpty(&AllFloor[2 * e.floor + (e.state == GoingUp)])&&e.peopleNum<MAX_PEOPLE)
 		{
-			//if (e.count != 1)outtime = 0;
 			AddActivity(CurrentTime + INOUT_TIME, In);
 			e.InOut = true;
 			break;
 		}
 		else if (QueueEmpty(&AllFloor[2 * e.floor + (e.state == GoingUp)]))e.InOut = false;;
-		//if(IsEmpty_S(e.Stack[e.floor]))e.CallCar[e.floor] = false;
 		break;
 	case Closing:
-		//e.IsClosing = true;
 		if (open)
 		{
 			e.count = CANCLE_CLOSE_TIME;
@@ -124,6 +104,7 @@ Condition NextCondition()
 			e.NoOneInOut = false;
 			printf("电梯门已关闭，");
 			PrintTime();
+			e.count = 1;
 			return Closed;
 		}
 		break;
@@ -176,16 +157,13 @@ Condition NextCondition()
 		break;
 	case Decelerate:
 		e.count = 1;
-		if (e.state == GoingUp /* && !e.count */)
-			return Arrive;
-		else if (e.state == GoingDown/* && !e.count*/)
-			return Arrive;
+		return Arrive;
 	default:break;
 	}
 	return e.condition;
 }
 
-void AddActivity(int startTime, Condition(*fn)(void))
+void AddActivity(int startTime, Condition(*fn)(void))//添加活动
 {
 	Activity* temp = (Activity*)malloc(sizeof(Activity));
 	if (!temp)exit(-1);
@@ -212,7 +190,7 @@ void AddActivity(int startTime, Condition(*fn)(void))
 	}
 }
 
-void Act()
+void Act()//到达开始时间时进行活动
 {
 	if (activity && CurrentTime == activity->startTime)
 	{
@@ -220,7 +198,7 @@ void Act()
 		e.condition = activity->fn();
 		activity = activity->next;
 		free(temp);
-		Act();
+		Act();//以防同一时刻有多个活动开始
 	}
 }
 
@@ -255,39 +233,27 @@ void run()
 	serve_people = 0;
 	e.count = 0;
 	int people_time = 0;
-	//Activity* act;
-	//Condition next_condition;
+	bool add = true;
 
-	while (CurrentTime < 30000)
+	while (CurrentTime < MAX_RUN_TIME)
 	{
 		if (CurrentTime == people_time)
 		{
 			people_time += AddPeople();
 			people_id++;
+			add = true;
 		}
-		DeAllFloor();
-		//e.state = ChangeDirection();
-		//CallOutside();
-		//CallInside();
-		if (!e.count || e.condition == Closed || e.condition == Closing)
-		{
+		DeAllFloor();//耐心为0的人离开
+		if (!e.count || add&&(e.condition == Closed || e.condition == Closing))
+		{//倒计时为0或在CLOSED或closing状态且正好来了一个人时需要判断电梯接下来的状态
 			e.state = ChangeDirection();
 			e.condition = NextCondition();
-
+			add = false;
 		}
-		/*if (next_condition != e.condition)
-		{
-			printf("电梯状态为%s，",ConditionToString(next_condition));
-			PrintTime();
-			e.condition = next_condition;
-		}*/
 		Act();
-		//act = activity;
-		//printf("电梯位于%d层，状态:%d\n",e.floor,e.condition);
-		//if (act)printf("下一次活动时间：%d\n",act->startTime);
 		if (e.count >= 0)e.count--;
 		CurrentTime++;
-		//Sleep(100);
+		//Sleep(100);//每0.1秒执行一次
 	}
 	printf("一共来了%d位乘客，有%d位曾乘过电梯。\n", people_id - 1, serve_people);
 }
