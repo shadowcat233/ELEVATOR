@@ -28,7 +28,7 @@ typedef enum Status
     NO, YES, OVERFLOW
 }Status;
 #define T 1//单位时间
-#define MAX_RUN_TIME 30000*T//最长运行时间
+#define MAX_RUN_TIME 10000*T//最长运行时间
 
 int CurrentTime;//当前时间
 
@@ -84,7 +84,8 @@ void QueuePop(Queue* pq);
 DataType QueueHead(Queue* pq);
 //队列是否为空
 bool QueueEmpty(Queue* pq);
-
+//打印队列
+void PrintQueue(Queue* pq);
 //初始化所有队列
 void AllQueueInit();
 
@@ -214,5 +215,13 @@ Condition Out(void);
 //乘客进电梯
 Condition In(void);
 char* ConditionToString(Condition con);
+
+#define XSTART 4
+#define YSTART 6
+void goto_xy(int x,int y);
+void DrawElevator();
+void DrawFloorQueue();
+void PrintIntroduction();
+void View();
 
 #endif /* elevator_hpp */

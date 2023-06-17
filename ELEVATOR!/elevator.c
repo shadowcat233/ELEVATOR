@@ -75,14 +75,14 @@ bool IsNeedStop() {
 void GoUpOneFloor()
 {
     e.floor++;
-    printf("电梯上升到%d层,", GetFloor(e.floor));
-    PrintTime();
+  //  printf("电梯上升到%d层,", GetFloor(e.floor));
+  //  PrintTime();
 }
 void GoDownOneFloor()
 {
     e.floor--;
-    printf("电梯下降到%d层,", GetFloor(e.floor));
-    PrintTime();
+   // printf("电梯下降到%d层,", GetFloor(e.floor));
+    //PrintTime();
 }
 Status ElevatorIn(int i)
 {
@@ -91,8 +91,8 @@ Status ElevatorIn(int i)
     DePeople(i);
     e.peopleNum++;
     e.CallCar[p->OutFloor] = true;
-    printf("乘客%d进入电梯,", p->id);
-    PrintTime();
+   // printf("乘客%d进入电梯,", p->id);
+  //  PrintTime();
     return YES;
 }
 Status ElevatorOut()
@@ -102,8 +102,8 @@ Status ElevatorOut()
     Pop(e.Stack[e.floor], p);
     //if (!(*p)->id)return NO;
     e.peopleNum--;
-    printf("乘客%d离开电梯,", (*p)->id);
-    PrintTime();
+   /// printf("乘客%d离开电梯,", (*p)->id);
+    //PrintTime();
     return YES;
 }
 int GetFloor(int floor)

@@ -71,6 +71,16 @@ bool QueueEmpty(Queue* pq)//检测队列是否为空
 	return pq->head == NULL;
 }
 
+void PrintQueue(Queue* pq)
+{
+	QNode* p = pq->head;
+	while (p)
+	{
+		printf("%d ", p->data->id);
+		p = p->next;
+	}
+}
+
 void AllQueueInit()
 {
 	int i;
@@ -111,11 +121,10 @@ Status IsEmpty_S(Stack* S)//栈是否为空
 
 void PrintStack(Stack S)//打印栈中元素
 {
-	printf("(");
-	for (int i = 0; i < S.top; ++i) {
+	//printf("(");
+	for (int i = 0; i < S.top; ++i) 
 		printf(" %d ", S.person[i]->id);
-	}
-	printf(")");
+	//printf(")");
 }
 
 void PrintTime()//打印时间
@@ -130,7 +139,7 @@ int AddPeople()//添加人物
 	if (!p)return OVERFLOW;
 	p->id = people_id;
 	p->GiveupTime = rand() % 500 + 100 + CurrentTime;
-	p->InterTime = rand() % 300 + 50;
+	p->InterTime = rand() % 250 + 50;
 	p->InFloor = rand() % MAXFLOOR;
 	p->OutFloor = (p->InFloor + 1 + rand() % (MAXFLOOR - 1)) % MAXFLOOR;
 	af = 2 * p->InFloor + (p->InFloor < p->OutFloor);
@@ -142,8 +151,8 @@ int AddPeople()//添加人物
 		e.CallCar[1] = false;
 		e.stay = false;
 	}
-	printf("乘客%d来到了%d层电梯门前，ta要去%d层，", p->id, GetFloor(p->InFloor), GetFloor(p->OutFloor));
-	PrintTime();
+	//printf("乘客%d来到了%d层电梯门前，ta要去%d层，", p->id, GetFloor(p->InFloor), GetFloor(p->OutFloor));
+	//PrintTime();
 	return p->InterTime;
 }
 
@@ -156,10 +165,10 @@ void DePeople(int i)
 		if (i % 2)e.CallUp[i / 2] = false;
 		else e.CallDown[i / 2] = false;
 	}
-	if (i != 2 * e.floor + e.state)//不是进电梯
+	if (i/2!=e.floor)//不是进电梯
 	{
-		printf("乘客%d离开了,", p->id);
-		PrintTime();
+		//printf("乘客%d离开了,", p->id);
+		//PrintTime();
 	}
 }
 
@@ -177,6 +186,6 @@ void DeAllFloor()
 {
 	int i = 0;
 	for (i = 0; i < MAXFLOOR * 2; i++)
-		if (i != 2 * e.floor+e.state)//除非电梯层数和方向满足需求
+		if (i/2!=e.floor)//除非电梯层数满足需求
 			LackPatience(i);
 }

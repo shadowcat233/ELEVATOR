@@ -146,6 +146,7 @@
     <ClCompile Include="elevator.c" />
     <ClCompile Include="main.c" />
     <ClCompile Include="people.c" />
+    <ClCompile Include="view.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

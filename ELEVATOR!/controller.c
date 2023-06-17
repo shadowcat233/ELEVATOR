@@ -72,8 +72,8 @@ Condition NextCondition()
 			return Opening;
 		}
 		e.count = 1;
-		printf("电梯门已打开，");
-		PrintTime();
+		//printf("电梯门已打开，");
+		//PrintTime();
 		return Opened;
 		break;
 	case Opened:
@@ -102,8 +102,8 @@ Condition NextCondition()
 		{
 			e.count = DELAY_TIME;
 			e.NoOneInOut = false;
-			printf("电梯门已关闭，");
-			PrintTime();
+			//printf("电梯门已关闭，");
+			//PrintTime();
 			e.count = 1;
 			return Closed;
 		}
@@ -247,9 +247,15 @@ void run()
 			add = false;
 		}
 		Act();
+		if (CurrentTime % 10 == 0)
+		{
+			system("cls");
+			View();
+		}
 		if (e.count >= 0)e.count--;
 		CurrentTime++;
-		Sleep(10);//每0.01秒执行一次，相当于加速十倍
+		Sleep(50);//每0.05秒执行一次，相当于加速到2倍
 	}
+	goto_xy(1,18);
 	printf("一共来了%d位乘客，有%d位曾乘过电梯。\n", people_id - 1, serve_people);
  }
