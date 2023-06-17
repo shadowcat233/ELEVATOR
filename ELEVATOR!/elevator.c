@@ -75,13 +75,13 @@ bool IsNeedStop() {
 void GoUpOneFloor()
 {
     e.floor++;
-    printf("电梯上升到%d层,", e.floor);
+    printf("电梯上升到%d层,", GetFloor(e.floor));
     PrintTime();
 }
 void GoDownOneFloor()
 {
     e.floor--;
-    printf("电梯下降到%d层,", e.floor);
+    printf("电梯下降到%d层,", GetFloor(e.floor));
     PrintTime();
 }
 Status ElevatorIn(int i)
@@ -106,9 +106,14 @@ Status ElevatorOut()
     PrintTime();
     return YES;
 }
-
+int GetFloor(int floor)
+{
+    if (!floor)return -1;
+    else return floor;
+}
+/*
 void CallOutside()
-{/*
+{
     int i;
     for (i = 0; i < MAXFLOOR; i++)
     {
@@ -116,7 +121,7 @@ void CallOutside()
         else e.CallUp[i] = false;
         if (!QueueEmpty(&AllFloor[2 * i]))e.CallDown[i] = true;
         else e.CallDown[i] = false;
-    }*/
+    }
 }
 void CallInside()
 {
@@ -125,7 +130,7 @@ void CallInside()
         if (!IsEmpty_S(e.Stack[i]))e.CallCar[i] = true;
         else e.CallCar[i] = false;
 
-}
+}*/
 
 State ChangeDirection()
 {

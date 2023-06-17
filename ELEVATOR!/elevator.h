@@ -33,7 +33,8 @@ typedef enum Status
 int CurrentTime;//当前时间
 
 //乘客
-typedef struct {
+typedef struct 
+{
     int id;//乘客编号
     int InFloor;//进入时的楼层
     int OutFloor;//要去的楼层
@@ -126,7 +127,8 @@ typedef enum Condition
 
 
 //电梯
-typedef struct Elevator {
+typedef struct Elevator 
+{
     State state;//电梯当前的方向
     Condition condition;//电梯当前进行的活动
     bool CallUp[MAXFLOOR];//电梯外向上的按钮
@@ -176,13 +178,16 @@ void GoDownOneFloor();
 Status ElevatorIn(int i);
 //一名乘客出电梯
 Status ElevatorOut();
-void CallOutside();
-void CallInside();
+//void CallOutside();
+//void CallInside();
 //判断电梯即将移动方向
 State ChangeDirection();
+//回复电梯楼层
+int GetFloor(int floor);
 
 //活动（包括乘客进电梯，乘客出电梯，检查是否关门）
-typedef struct Activity {
+typedef struct Activity 
+{
     int startTime;//活动开始的时间
     Condition(*fn)(void);//需进行的活动（程序指针）
     struct Activity* next;//下一个活动

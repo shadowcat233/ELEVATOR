@@ -132,7 +132,7 @@ int AddPeople()//添加人物
 		e.CallCar[1] = false;
 		e.stay = false;
 	}
-	printf("乘客%d来到了%d层电梯门前，ta要去%d层，", p->id, p->InFloor, p->OutFloor);
+	printf("乘客%d来到了%d层电梯门前，ta要去%d层，", p->id, GetFloor(p->InFloor), GetFloor(p->OutFloor));
 	PrintTime();
 	return p->InterTime;
 }
