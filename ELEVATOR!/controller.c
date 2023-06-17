@@ -127,14 +127,10 @@ Condition NextCondition()
 		}
 		break;
 	case Accelerate:
-		if (!e.count)
-		{
 			e.count = e.state ? UP_TIME : DOWN_TIME;
 			return Moving;
-		}
-		break;
 	case Moving:
-		if (e.state == GoingUp && !e.count)
+		if (e.state == GoingUp)
 		{
 			GoUpOneFloor();
 			if (IsNeedStop())
@@ -144,7 +140,7 @@ Condition NextCondition()
 			}
 			e.count = UP_TIME;
 		}
-		else if (e.state == GoingDown && !e.count)
+		else
 		{
 			GoDownOneFloor();
 			if (IsNeedStop())
@@ -253,7 +249,7 @@ void run()
 		Act();
 		if (e.count >= 0)e.count--;
 		CurrentTime++;
-		//Sleep(100);//每0.1秒执行一次
+		Sleep(10);//每0.01秒执行一次，相当于加速十倍
 	}
 	printf("一共来了%d位乘客，有%d位曾乘过电梯。\n", people_id - 1, serve_people);
-}
+ }
