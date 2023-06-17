@@ -22,12 +22,22 @@ void QueuePush(Queue* pq, DataType x)//入队
 	}
 	else
 	{
-		QNode* NewNode = (QNode*)malloc(sizeof(QNode));
+		QNode* NewNode = (QNode*)malloc(sizeof(QNode)),*p=pq->head;
 		if (!NewNode)exit(-1);
 		NewNode->data = x;
-		NewNode->next = NULL;
-		pq->tail->next = NewNode;
-		pq->tail = NewNode;
+		if (!p->next && p->data->GiveupTime > x->GiveupTime)
+		{
+			NewNode->next = p;
+			pq->head = NewNode;
+		}
+		else
+		{
+			while (p->next&&p->next->data->GiveupTime<x->GiveupTime)p=p->next;
+			NewNode->next = p->next;
+			p->next = NewNode;
+			if (!NewNode->next)
+				pq->tail = NewNode;
+		}
 	}
 }
 
@@ -120,7 +130,7 @@ int AddPeople()//添加人物
 	if (!p)return OVERFLOW;
 	p->id = people_id;
 	p->GiveupTime = rand() % 500 + 100 + CurrentTime;
-	p->InterTime = rand() % 250 + 50;
+	p->InterTime = rand() % 300 + 50;
 	p->InFloor = rand() % MAXFLOOR;
 	p->OutFloor = (p->InFloor + 1 + rand() % (MAXFLOOR - 1)) % MAXFLOOR;
 	af = 2 * p->InFloor + (p->InFloor < p->OutFloor);
@@ -146,7 +156,7 @@ void DePeople(int i)
 		if (i % 2)e.CallUp[i / 2] = false;
 		else e.CallDown[i / 2] = false;
 	}
-	if (!(e.floor == p->InFloor))
+	if (i != 2 * e.floor + e.state)//不是进电梯
 	{
 		printf("乘客%d离开了,", p->id);
 		PrintTime();
@@ -167,6 +177,6 @@ void DeAllFloor()
 {
 	int i = 0;
 	for (i = 0; i < MAXFLOOR * 2; i++)
-		if (!(i == 2 * e.floor || i == 2 * e.floor + 1))
+		if (i != 2 * e.floor+e.state)//除非电梯层数和方向满足需求
 			LackPatience(i);
 }
